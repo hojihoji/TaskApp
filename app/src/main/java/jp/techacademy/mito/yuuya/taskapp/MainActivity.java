@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 
@@ -19,7 +21,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     public final static String EXTRA_TASK ="jp.techacademy.mito.yuuya.taskapp.TASK";
 
     private Realm mRealm;
@@ -37,6 +39,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //課題追加
+        EditText mSearchText = (EditText)findViewById(R.id.search_text);
+        final String stringSearchText = mSearchText.getText().toString(); //String型に変換
+
+        Button mSearchButton = (Button)findViewById(R.id.search_button);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reloadSearchListView();
+            }
+        });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +140,17 @@ public class MainActivity extends AppCompatActivity {
     private void reloadListView(){
         //Realmデータベースから、「全てのデータを取得して日付順に並べた結果」を取得
         RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAllSorted("date", Sort.DESCENDING);
+        //上記の結果を、TaskListとしてセットする
+        mTaskAdepter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
+        //TaskのListView用のアダプタに渡す
+        mListView.setAdapter(mTaskAdepter);
+        //表示を更新するために、アダプターにデータが更新されたことを知らせる
+        mTaskAdepter.notifyDataSetChanged();
+    }
+
+    private void reloadSearchListView(){
+        //Realmデータベースから、「全てのデータを取得して日付順に並べた結果」を取得
+        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).contains("category","stringSearchText");
         //上記の結果を、TaskListとしてセットする
         mTaskAdepter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
         //TaskのListView用のアダプタに渡す
