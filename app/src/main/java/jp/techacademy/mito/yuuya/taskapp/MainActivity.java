@@ -1,5 +1,7 @@
 package jp.techacademy.mito.yuuya.taskapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -90,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
                         mRealm.commitTransaction();
 
                         reloadListView();
+
+                        Intent resultIntent = new Intent(getApplicationContext(), TaskAlarmReceiver.class);
+                        PendingIntent resultPendingIntent = PendingIntent.getBroadcast(
+                                MainActivity.this,
+                                task.getId(),
+                                resultIntent,
+                                PendingIntent.FLAG_CANCEL_CURRENT
+                        );
+
+                        AlarmManager alermManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                        alermManager.cancel(resultPendingIntent);
                     }
                 });
 

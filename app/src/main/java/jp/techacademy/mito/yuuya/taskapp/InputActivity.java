@@ -14,7 +14,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,6 +26,7 @@ public class InputActivity extends AppCompatActivity {
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Button mDateButton, mTimeButton;
     private EditText mTitleEdit, mContentEdit;
+    private EditText mCategoryEdit; //課題追記
     private Task mTask;
     private View.OnClickListener mOnDateClickListener = new View.OnClickListener() {
         @Override
@@ -93,6 +93,7 @@ public class InputActivity extends AppCompatActivity {
         findViewById(R.id.done_button).setOnClickListener(mDoneClickListener);
         mTitleEdit = (EditText)findViewById(R.id.title_edit_text);
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
+        mCategoryEdit = (EditText) findViewById(R.id.category_edit_text);//課題追記
 
         //EXTRA_TASKからTaskのidを取得して、idからTaskのインスタンスを取得する
         Intent intent = getIntent();
@@ -152,9 +153,12 @@ public class InputActivity extends AppCompatActivity {
 
         String title = mTitleEdit.getText().toString();
         String content = mContentEdit.getText().toString();
+        String category = mCategoryEdit.getText().toString();//課題追記
 
         mTask.setTitle(title);
         mTask.setContents(content);
+        mTask.setContents(category);//課題追記
+
         GregorianCalendar calendar = new GregorianCalendar(mYear,mMonth,mDay,mHour,mMinute);
         Date date = calendar.getTime();
         mTask.setDate(date);
