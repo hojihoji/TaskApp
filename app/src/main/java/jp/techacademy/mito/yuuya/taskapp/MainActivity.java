@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity{
 
         //課題追加
         EditText mSearchText = (EditText)findViewById(R.id.search_text);
-        final String stringSearchText = mSearchText.getText().toString(); //String型に変換
+        String stringSearchText = mSearchText.getText().toString(); //String型に変換
 
         Button mSearchButton = (Button)findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(new View.OnClickListener() {
