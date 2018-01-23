@@ -43,14 +43,17 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         //課題追加
-        EditText mSearchText = (EditText)findViewById(R.id.search_text);
-        stringSearchText = mSearchText.getText().toString(); //String型に変換
-
         Button mSearchButton = (Button)findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reloadSearchListView();
+                EditText mSearchText = (EditText)findViewById(R.id.search_text);
+                stringSearchText = mSearchText.getText().toString(); //String型に変換;
+                if(stringSearchText !=null) {
+                    reloadSearchListView();
+                }else{
+                    reloadListView();
+                }
             }
         });
 
@@ -154,7 +157,7 @@ public class MainActivity extends AppCompatActivity{
         //Realmデータベース<Task>への質問を新規作成
         RealmQuery<Task>query = mRealm.where(Task.class);
         //フィールドカテゴリ内にstringSearchTextと同じ文字を含むものを質問する
-        query.contains("category","stringSearchText");
+        query.contains("category",stringSearchText);
         //質問を実行し、日付の新しいものから取得
         RealmResults<Task> searchRealmResults = query.findAllSorted("date",Sort.DESCENDING);
         //上記結果を、TaskListとしてセットする
