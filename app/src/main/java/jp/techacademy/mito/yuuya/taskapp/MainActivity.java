@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity{
 
     private ListView mListView;
     private TaskAdapter mTaskAdepter;
+    public String stringSearchText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
 
         //課題追加
         EditText mSearchText = (EditText)findViewById(R.id.search_text);
-        String stringSearchText = mSearchText.getText().toString(); //String型に変換
+        stringSearchText = mSearchText.getText().toString(); //String型に変換
 
         Button mSearchButton = (Button)findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -149,10 +151,14 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void reloadSearchListView(){
-        //Realmデータベースから、「全てのデータを取得して日付順に並べた結果」を取得
-        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).contains("category","stringSearchText");
-        //上記の結果を、TaskListとしてセットする
-        mTaskAdepter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
+        //Realmデータベース<Task>への質問を新規作成
+        RealmQuery<Task>query = mRealm.where(Task.class);
+        //フィールドカテゴリ内にstringSearchTextと同じ文字を含むものを質問する
+        query.contains("category","stringSearchText");
+        //質問を実行し、日付の新しいものから取得
+        RealmResults<Task> searchRealmResults = query.findAllSorted("date",Sort.DESCENDING);
+        //上記結果を、TaskListとしてセットする
+        mTaskAdepter.setTaskList(mRealm.copyFromRealm(searchRealmResults));
         //TaskのListView用のアダプタに渡す
         mListView.setAdapter(mTaskAdepter);
         //表示を更新するために、アダプターにデータが更新されたことを知らせる

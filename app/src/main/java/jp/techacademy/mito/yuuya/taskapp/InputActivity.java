@@ -115,6 +115,7 @@ public class InputActivity extends AppCompatActivity {
             //更新の場合
             mTitleEdit.setText(mTask.getTitle());
             mContentEdit.setText(mTask.getContents());
+            mCategoryEdit.setText(mTask.getCategory());
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mTask.getDate());
@@ -157,7 +158,7 @@ public class InputActivity extends AppCompatActivity {
 
         mTask.setTitle(title);
         mTask.setContents(content);
-        mTask.setContents(category);//課題追記
+        mTask.setCategory(category);//課題追記
 
         GregorianCalendar calendar = new GregorianCalendar(mYear,mMonth,mDay,mHour,mMinute);
         Date date = calendar.getTime();
